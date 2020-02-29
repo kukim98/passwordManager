@@ -14,6 +14,6 @@ class PasswordManager{
 		ac.addUserData("Amazon", "Pa$$word123", 1);
 		
 		ac.queryAllUserData();
-		//should probably have some close connection here maybe..?
+		
 	}
 }
