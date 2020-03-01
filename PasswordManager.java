@@ -7,8 +7,26 @@ class PasswordManager{
 
 	private static String menuValidRegEx = "^[12345]$";
 	private static String nonEmptyWildCardRegEx = ".+";
+	private static String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
 	private static AccountManager ac = new AccountManager("Db/passwordManagerDb.db"); 
 	private static EncryptionManager ec;
+	private static EmailVerification ev;
+
+/*
+Utility Functions that substitutes the Java print statements with something terser.
+*/
+	public static void print(Object o){
+		System.out.print(o);
+	}
+
+	public static void println(Object o){
+		System.out.println(o);
+	}
+
 /*
 Utility Function that prompts the user for and returns a valid input.
 String prompt is the String message instruction to prompt the user for an input.
@@ -23,21 +41,24 @@ If !valid, user input is valid iff the user input does not match the regEx.
 		boolean validInput = false;
 		Scanner in = new Scanner(System.in);
 		do {
-			System.out.println(prompt);
+			println(prompt);
 			ret = in.nextLine();
 			m = r.matcher(ret);
 		} while(valid != m.find());
 		return ret;
 	}
 
+
 /*
 Handles Adding Account
 */
 	public static void addAccount(){
-		String website = handleUserInput("Enter the website for the account", nonEmptyWildCardRegEx, true);
-		int unId = Integer.parseInt(handleUserInput("Enter your userID. This must be an integer", "^\\d+$", true));
-		String pw = handleUserInput("Enter your password", nonEmptyWildCardRegEx, true);
-		ac.addUserData(website, ec.encrypt(pw), unId);
+		String website = handleUserInput("Enter what password is for.", nonEmptyWildCardRegEx, true);
+//		int unId = Integer.parseInt(handleUserInput("Enter your userID. This must be an integer", "^\\d+$", true));
+		String pw = handleUserInput("Enter password.", nonEmptyWildCardRegEx, true);
+		ac.addUserData(website, pw, 1);
+
+		ac.queryAllUserData();
 	}
 
 /*
@@ -53,13 +74,23 @@ Handles Adding Account
 /*
 */
 	public static void viewAllAccount(){
-		ac.queryAllUserData();
+		String email = "";
+		email = handleUserInput("Verification: Enter your email to verify your identity. Must be a valid email address.", emailRegex, true);
+		ev.sendEmail(email);
+//		ac.queryAllUserData();
 	}
 
 	public static void main(String args[]){
 		boolean endLoop = false;
 		while (!endLoop){
-			String choice = handleUserInput("\nMenu\n--------------------\n1. Add Account\n2. Delete Account\n3. Update Account\n4. View All Accounts\n5. Quit\n--------------------\n", menuValidRegEx, true);
+			String choice = handleUserInput("\nMenu\n" + 
+																			"--------------------\n" + 
+																			"1. Add Account\n" + 
+																			"2. Delete Account\n" + 
+																			"3. Update Account\n" + 
+																			"4. View All Accounts\n" + 
+																			"5. Quit\n" + 
+																			"--------------------\n", menuValidRegEx, true);
 			switch(choice){
 				case "1":
 					addAccount();
@@ -71,9 +102,13 @@ Handles Adding Account
 				case "4":
 					viewAllAccount();
 					break;
-				default: //"5"
-					System.out.println("Terminating Program.\n");
+				case "5":
+					println("Terminating Program.\n");
 					endLoop = true;
+					break;
+				default: //"5"
+					println("Invalid Input. Please try again\n");
+
 			}
 		}
 	}
