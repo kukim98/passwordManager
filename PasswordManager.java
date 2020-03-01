@@ -7,7 +7,8 @@ class PasswordManager{
 
 	private static String menuValidRegEx = "^[12345]$";
 	private static String nonEmptyWildCardRegEx = ".+";
-	private static String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+	public static String fourDigitRegex = "\\d{4}";
+	public static String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
                 "A-Z]{2,7}$";
@@ -74,10 +75,7 @@ Handles Adding Account
 /*
 */
 	public static void viewAllAccount(){
-		String email = "";
-		email = handleUserInput("Verification: Enter your email to verify your identity. Must be a valid email address.", emailRegex, true);
-		ev.sendEmail(email);
-//		ac.queryAllUserData();
+		ev.emailVerify();
 	}
 
 	public static void main(String args[]){
