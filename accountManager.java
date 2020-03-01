@@ -19,16 +19,16 @@ class AccountManager{
 	}
 	
 	private Connection getConnection() {
-        // SQLite connection string
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(this.dbLocation);
-            System.out.println("Connection successful!");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return conn;
-    }
+		// SQLite connection string
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(this.dbLocation);
+			System.out.println("Connection successful!");
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+			return conn;
+	}
 	
 	//For testing...
 	public void queryAllUsers()
@@ -50,7 +50,7 @@ class AccountManager{
                 System.out.println(rs.getInt("ID") +  "\t" + 
                                    rs.getString("AccountName") + "\t" +
                                    rs.getString("Password") + "\t" +
-                                   rs.getInt("UserID") );
+                                   rs.getString("UserID") );
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
