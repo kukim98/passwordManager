@@ -39,17 +39,31 @@ class AccountManager{
 	public void queryAllUserData()
 	{
 		String sql = "SELECT * FROM UserData";
-        
+        EncryptionManager emm = new EncryptionManager();
         try (Connection conn = getConnection();
              Statement stmt  = conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)){
             
             // loop through the result set
             while (rs.next()) {
-                System.out.println(rs.getInt("ID") +  "\t" + 
-                                   rs.getString("AccountName") + "\t" +
-                                   rs.getString("Password") + "\t" +
-                                   rs.getString("UserID") );
+                System.out.printf("%3d\t%20s\t%20s\t%s\n", rs.getInt("ID"), rs.getString("AccountName"), emm.decrypt(rs.getString("Password")), rs.getString("UserID"));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+	}
+	
+	public void queryAllUserDataEncrypted()
+	{
+		String sql = "SELECT * FROM UserData";
+        EncryptionManager emm = new EncryptionManager();
+        try (Connection conn = getConnection();
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)){
+            
+            // loop through the result set
+            while (rs.next()) {
+                System.out.printf("%3d\t%20s\t%20s\t%s\n", rs.getInt("ID"), rs.getString("AccountName"), rs.getString("Password"), rs.getString("UserID"));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

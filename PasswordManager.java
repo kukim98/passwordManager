@@ -54,12 +54,13 @@ If !valid, user input is valid iff the user input does not match the regEx.
 Handles Adding Account
 */
 	public static void addAccount(){
+		ec = new EncryptionManager();
 		String website = handleUserInput("Enter what password is for.", nonEmptyWildCardRegEx, true);
 //		int unId = Integer.parseInt(handleUserInput("Enter your userID. This must be an integer", "^\\d+$", true));
 		String pw = handleUserInput("Enter password.", nonEmptyWildCardRegEx, true);
-		ac.addUserData(website, pw, 1);
+		ac.addUserData(website, ec.decrypt(pw), 1);
 
-		ac.queryAllUserData();
+		ac.queryAllUserDataEncrypted();
 	}
 
 /*
@@ -76,6 +77,7 @@ Handles Adding Account
 */
 	public static void viewAllAccount(){
 		ev.emailVerify();
+		ac.queryAllUserData();
 	}
 
 	public static void main(String args[]){

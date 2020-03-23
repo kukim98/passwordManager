@@ -1,4 +1,3 @@
-package reccomender;
 import java.util.Random;
 public class reccomender {
 

@@ -1,0 +1,21 @@
+{
+	"manifest_version": 2,
+	"name": "Password Manager",
+	"version": "2.1",
+	"description": "Manages your passwords for different websites.",
+	"permissions": ["storage"],
+	"content_scripts":[
+		{
+			"matches": [
+				"<all_urls>"
+			],
+			"js": ["jquery-3.4.1.min.js", "psl.min.js", "content.js"]
+		}
+	],
+	"browser_action": {
+		"16": "icon_1.png"
+	},
+	"background": {
+		"scripts": ["background.js"]
+	}
+}

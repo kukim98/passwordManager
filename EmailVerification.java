@@ -22,9 +22,11 @@ class EmailVerification {
         }
         pm.println("Email has been verified!");
     }
+    
     public static Boolean codeVerify(String codeEntered){
         return codeEntered.equals(code);
     }
+    
     public static void sendEmail(String recipient) {
 
         final String username = "weWillEncryptYou@gmail.com";

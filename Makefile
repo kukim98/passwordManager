@@ -1,7 +1,7 @@
 JC = javac
-JFLAGS = -cp
-DB_JAR_PATH = ./Db/sqlite-jdbc-3.30.1.jar
-EMAIL_JAR_PATH = ./Email/javax.mail-1.6.2.jar
+JFLAGS = -classpath
+DB_JAR_PATH = Db/*.jar
+EMAIL_JAR_PATH = Email/*.jar
 
 .SUFFIXES: .java .class
 
