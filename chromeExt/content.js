@@ -1,15 +1,15 @@
 // content.js
 //This is just a test function
 chrome.runtime.onMessage.addListener(
-	function(request, sender, sendResponse) {
-		if( request.message === "clicked_browser_action" ) {
+	function (request, sender, sendResponse) {
+		if (request.message === "clicked_browser_action") {
 			var firstHref = $("a[href^='http']").eq(0).attr("href");
 
 			console.log(firstHref);
 
 			// This line is new!
-			chrome.runtime.sendMessage({"message": "open_new_tab", "url": firstHref});
-		}else if(request.message === "fillFields"){
+			chrome.runtime.sendMessage({ "message": "open_new_tab", "url": firstHref });
+		} else if (request.message === "fillFields") {
 			request.id.value = "default ID";
 			request.pw = "default PW";
 		}
@@ -61,12 +61,12 @@ const rc = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36];
 This will retrun an array of login <input> and password <input> from the current webpage.
 If the webpage does not have the tags, it will return undefined.
 */
-function getLoginFields(){
+function getLoginFields() {
 	let inputs = document.getElementsByTagName("input");
-	for(let i = 0; i < inputs.length; i++){
+	for (let i = 0; i < inputs.length; i++) {
 		let loginField = inputs[i];
-		if(i + 1 < inputs.length && inputs[i + 1].hasAttribute('type')){
-			if(inputs[i + 1].getAttribute('type') === "password"){
+		if (i + 1 < inputs.length && inputs[i + 1].hasAttribute('type')) {
+			if (inputs[i + 1].getAttribute('type') === "password") {
 				let passwordField = inputs[i + 1];
 				return [loginField, passwordField];
 			}
@@ -79,9 +79,9 @@ function getLoginFields(){
 This will - given an array of char - dequeue and then enqueue the first element.
 The modified array is returned.
 */
-function rotateAByteClock(data){
+function rotateAByteClock(data) {
 	let temp = [];
-	for(let i = 0; i < data.length - 1; i++){
+	for (let i = 0; i < data.length - 1; i++) {
 		temp[i] = data[i + 1];
 	}
 	temp[data.length - 1] = data[0];
@@ -91,9 +91,9 @@ function rotateAByteClock(data){
 /*
 This will use the S-table array constant to return an 8b output after GF(2) polynomial and Nyberg transformation.
 */
-function subBytes(data){
+function subBytes(data) {
 	let temp = [];
-	for(let i = 0; i < data.length; i++){
+	for (let i = 0; i < data.length; i++) {
 		temp[i] = sBox[data[i]];
 	}
 	return temp;
@@ -105,12 +105,12 @@ The input data is assumed to be an 16B vector, but it is interpreted like a 4X4 
 Given the n-th row of the "matrix", it will call the rotatAByteClock function n times.
 The new modified matrix is returned.
 */
-function shiftRows(data){
+function shiftRows(data) {
 	var arr = [];
 	var vector = [];
-	for(let i = 0; i < 4; i++){
+	for (let i = 0; i < 4; i++) {
 		let temp = data.slice(4 * i, 4 * (i + 1));
-		for(let j = 0; j < i; j++){
+		for (let j = 0; j < i; j++) {
 			vector = rotateAByteClock(temp);
 			temp = vector;
 		}
@@ -127,31 +127,31 @@ When multiplying a hexadecimal with a '3', one can left (bit) shift once and the
 When multiplying a hexdecimal with a '1', one can simply return the hex value since one times anything is one.
 Before returning the result of the function, 256 is subtracted from the original if there is was an overflow.
 */
-function mixColumnsHelper(col, galVect){
+function mixColumnsHelper(col, galVect) {
 	let n = 0;
 	let result = -1;
-	for(let i = 0; i < galVect.length; i++){
-		if(galVect[i] == 2){
+	for (let i = 0; i < galVect.length; i++) {
+		if (galVect[i] == 2) {
 			n = col[i] << 1;
-			if(col[i] >= 128){
+			if (col[i] >= 128) {
 				n = n ^ 0x1b;
 			}
-		}else if(galVect[i] == 3){
+		} else if (galVect[i] == 3) {
 			n = col[i] << 1;
-			if(col[i] >= 128){
+			if (col[i] >= 128) {
 				n = n ^ 0x1b;
 			}
 			n = n ^ col[i];
-		}else{
+		} else {
 			n = col[i];
 		}
-		if(result == -1){
+		if (result == -1) {
 			result = n;
-		}else{
+		} else {
 			result = n ^ result;
 		}
 	}
-	while(result / 256 >= 1){
+	while (result / 256 >= 1) {
 		result -= 256;
 	}
 	return result;
@@ -161,11 +161,11 @@ function mixColumnsHelper(col, galVect){
 This function will shuffle the columns using Galois field matrix and the helper function.
 The modified array is returned.
 */
-function mixColumns(data){
-	let arr = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-	for(let i = 0; i < 4; i++){
+function mixColumns(data) {
+	let arr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+	for (let i = 0; i < 4; i++) {
 		let col = [data[i], data[4 + i], data[8 + i], data[12 + i]];
-		for(let j = 0; j < 4; j++){
+		for (let j = 0; j < 4; j++) {
 			arr[4 * j + i] = mixColumnsHelper(col, galoisField.slice(4 * j, 4 * (j + 1)));
 		}
 	}
@@ -176,9 +176,9 @@ function mixColumns(data){
 This function will XOR add the data with the key.
 The modified array is returned.
 */
-function addRoundKey(data, key){
+function addRoundKey(data, key) {
 	let arr = [];
-	for(let i = 0; i < 16; i++){
+	for (let i = 0; i < 16; i++) {
 		arr[i] = data[i] ^ key[i];
 	}
 	return arr;
@@ -188,22 +188,22 @@ function addRoundKey(data, key){
 This function will return a new key value given the old key and the round value r.
 It uses the round constant and byte rotation and XOR additions.
 */
-function keySchedule(key, r){
+function keySchedule(key, r) {
 	let result = [];
 	let lastCol = [key[3], key[7], key[11], key[15]];
 	let recentCol = [];
 	lastCol = rotateAByteClock(lastCol);
 	lastCol = subBytes(lastCol);
-	for(let i = 0; i < 4; i++){
-		if(i == 0){
+	for (let i = 0; i < 4; i++) {
+		if (i == 0) {
 			result[4 * i] = key[i] ^ lastCol[i] ^ rc[r];
-		}else{
+		} else {
 			result[4 * i] = key[4 * i] ^ lastCol[i] ^ 0x00;
 		}
 	}
 	recentCol = [result[0], result[4], result[8], result[12]];
-	for(let j = 1; j < 4; j++){
-		for(let k = 0; k < 4; k++){
+	for (let j = 1; j < 4; j++) {
+		for (let k = 0; k < 4; k++) {
 			result[4 * k + j] = key[4 * k + j] ^ recentCol[k];
 			recentCol[k] = result[4 * k + j];
 		}
@@ -220,11 +220,11 @@ Visual representation of the arraies is that of a matrix.
 8, 9, 10, 11,
 12, 13, 14, 15]
 */
-function encrypt(data, key){
+function encrypt(data, key) {
 	let encrypted = [];
 	let newKey = key;
 	encrypted = addRoundKey(data, key);
-	for(let i = 1; i < 10; i++){
+	for (let i = 1; i < 10; i++) {
 		encrypted = subBytes(encrypted);
 		encrypted = shiftRows(encrypted);
 		encrypted = mixColumns(encrypted);
@@ -244,17 +244,18 @@ The data structure has the host-domain name as the key and the credentials (user
 This function will only be triggered when the user submits the form to with username and password <input> fields.
 This function will only be triggered when the username and the password are not empty strings.
 */
-function saveCredentials(un, pw){
-	if(un.length > 0 && pw.length > 0){
+function saveCredentials(un, pw) {
+	if (un.length > 0 && pw.length > 0) {
 		var subURL = psl.parse(window.location.hostname);
 		let sub = subURL.domain
 		console.log(sub);
 		console.log(un);
 		console.log(pw);
+
 		chrome.storage.local.set({
-			[sub]:{
-				un:[un],
-				pw:[pw]
+			[sub]: {
+				un: [un],
+				pw: [pw]
 			}
 		});
 	}
@@ -263,11 +264,11 @@ function saveCredentials(un, pw){
 /*
 This will add an onClick attribute to the submit button so that saveCredentials() is triggered when the user submits his/her credentials to the web app.
 */
-function setOnClickSaveCredential(){
+function setOnClickSaveCredential() {
 	let arr = getLoginFields();
-	if(arr != undefined){
+	if (arr != undefined) {
 		var form = arr[0].closest('form');
-		form.onclick = function(){
+		form.onclick = function () {
 			saveCredentials(arr[0].value, arr[1].value);
 		};
 	}
@@ -276,14 +277,14 @@ function setOnClickSaveCredential(){
 /*
 This will auto fill user credentials given there has been a saved user credential for the host-name web app and given there is a <form> with <input> tags for username and password.
 */
-function autoFillCredential(){
+function autoFillCredential() {
 	var subURL = psl.parse(window.location.hostname);
 	let sub = subURL.domain;
-	chrome.storage.local.get(sub, function(data){
+	chrome.storage.local.get(sub, function (data) {
 		console.log(data);
-		if(Object.keys(data).length != 0){
+		if (Object.keys(data).length != 0) {
 			let arr = getLoginFields();
-			if(arr != undefined){
+			if (arr != undefined) {
 				console.log(data[sub]);
 				arr[0].value = data[sub].un;
 				arr[1].value = data[sub].pw;
