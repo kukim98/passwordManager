@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<button onclick="myFunction(this.id);" id="submit"></button>
+
+<p id="demo"></p>
+
+<script>
+function myFunction(elt) {
+  var txt;
+  var answer = confirm("Press a button!");
+  if (answer == true) {
+    txt = confirm("You pressed yes! Password will be saved");
+  } else {
+    txt = confirm("You pressed cancel! Password will not be saved");
+  }
+  //document.getElementById("demo").innerHTML = txt;
+}
+</script>
+
+</body>
+</html>
