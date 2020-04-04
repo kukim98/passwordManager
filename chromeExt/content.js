@@ -591,7 +591,7 @@ function autoFillCredential() {
 	});
 }
 /* This function forwards to the saveOrNoSave function based on whether the user presses enter
-*/ 
+
 function clickSubmit(){
 	var clicked = document.getElementById('submit');
 	clicked.addEventListener("keydown", function (e) {
@@ -599,12 +599,13 @@ function clickSubmit(){
 			saveOrNoSave(e);
 		}
 	});
-	/*var clicked = document.getElementById('submit');
-	clicked.addEventListener("click", saveOrNoSave);*/
-}
+	//var clicked = document.getElementById('submit');
+	//clicked.addEventListener("click", saveOrNoSave);
+}*/ 
 /* This function is called when the user clicks the submit button. 
 	Asks user if they want to save or not save their password
 */ 
+/*
 function saveOrNoSave(e){
 	var txt;
 	var answer = confirm("Press a button!");
@@ -620,7 +621,8 @@ function saveOrNoSave(e){
 	} else {
 	  txt = confirm("You pressed cancel! Password will not be saved");
 	}
-}
+}*/
+
 //These are functions called when the web browser is loaded or refreshed.
 setOnClickSaveCredential();
 autoFillCredential();
