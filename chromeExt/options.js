@@ -1,38 +1,85 @@
 var editableTable = null;
-function init_dataTable() {
-
-}
+var count = 1;
 
 function restore_options() {
     chrome.storage.local.get(null, function (data) {
 
         if (Object.keys(data).length != 0) {
 
-            let count = 1;
             for (var propName in data) {
                 propValue = data[propName]
 
                 console.log(propName, propValue);
                 console.log(propName, propValue.un[0]);
                 console.log(propName, propValue.pw[0]);
+                //alert(propValue.key)
+                var someKey = propValue.key;
 
-                createTableRow(count, propName, propValue.un[0], propValue.pw[0]);
-                count++;
+                if (typeof someKey !== "undefined" && propValue.un !== "") {
+                    //createTableRow(count, propName, propValue.un, decrypt(propValue.pw, someKey));
+                    createTableRow(count, propName, propValue.un, propValue.pw, someKey);
+                    count++;
+                }
+
             }
         }
     });
+    init_dataTable();
+}
 
+function init_dataTable() {
     editableTable = new BSTable("mainTable", {
-        $addButton: $('#new-row-button')
+        $addButton: $('#new-row-button'),
+        onAdd: function () { },
+        onEdit: function (someObj) {
+            let keyValue = someObj[0].cells[1].innerHTML;
+            let us = someObj[0].cells[2].innerHTML;
+            let ps = someObj[0].cells[3].innerHTML;
+
+            save_to_chrome(keyValue, us, ps);
+            location.reload();
+        },
+        onBeforeDelete: function (row, allowDelete) {
+            let domainName = row[0].cells[1].innerHTML;
+            if (confirm("Are you sure you want to permanently delete your data for "
+                + domainName + "?")) {
+                allowDelete.accept = true;
+                delete_from_chrome(domainName);
+            }
+        }
+        //onDelete: function (someVar1, someVar2) { alert("delete"); return; }
     });
     editableTable.init();
 }
 
-function on_save() {
+function save_to_chrome(domain, un, pw) {
+    let key = "";
+    for (let i = 0; i < 16; i++) {
+        key = key.concat(Math.floor(Math.random() * 256));
+    }
 
+    pair = encrypt(pw, key);
+    chrome.storage.local.set({
+        [domain]: {
+            un: un,
+            pw: pair[0],
+            key: pair[1]
+        }
+    });
 }
 
-function createTableRow(index, website, username, password) {
+function delete_from_chrome(domain) {
+    //we will just remove the "username" to delete
+    chrome.storage.local.set({
+        [domain]: {
+            un: "",
+            pw: "",
+            key: ""
+        }
+    });
+}
+
+function createTableRow(index, website, username, password, someKey) {
     var tableRow = document.createElement("TR");
 
     var tableCell0 = document.createElement("TH");
@@ -49,6 +96,7 @@ function createTableRow(index, website, username, password) {
 
     var tableCell3 = document.createElement("TD");
     tableCell3.appendChild(document.createTextNode(password));
+    tableCell3.setAttribute("plain-text-pass", decrypt(password, someKey));
 
     tableRow.appendChild(tableCell0);
     tableRow.appendChild(tableCell1);
