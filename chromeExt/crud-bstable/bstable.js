@@ -24,13 +24,13 @@ class BSTable {
     var defaults = {
       editableColumns: null,          // Index to editable columns. If null all td will be editable. Ex.: "1,2,3,4,5"
       $addButton: null,               // Jquery object of "Add" button
-      onEdit: function() {},          // Called after edition
-      onBeforeDelete: function() {},  // Called before deletion
-      onDelete: function() {},        // Called after deletion
-      onAdd: function() {},           // Called when added a new row
+      onEdit: function () { },          // Called after edition
+      onBeforeDelete: function () { },  // Called before deletion
+      onDelete: function () { },        // Called after deletion
+      onAdd: function () { },           // Called when added a new row
       advanced: {                     // Do not override advanced unless you know what youre doing
-          columnLabel: 'Actions',
-          buttonHTML: `<div class="btn-group pull-right">
+        columnLabel: 'Actions',
+        buttonHTML: `<div class="btn-group pull-right">
                 <button id="bEdit" type="button" class="btn btn-sm btn-default">
                     <span class="fa fa-edit" > </span>
                 </button>
@@ -50,7 +50,7 @@ class BSTable {
     this.table = $('#' + tableId);
     this.options = $.extend(true, defaults, options);
 
-    /** @private */ this.actionsColumnHTML = '<td name="bstable-actions">' + this.options.advanced.buttonHTML + '</td>'; 
+    /** @private */ this.actionsColumnHTML = '<td name="bstable-actions">' + this.options.advanced.buttonHTML + '</td>';
   }
 
   // --------------------------------------------------
@@ -71,7 +71,7 @@ class BSTable {
     if (this.options.$addButton != null) {
       let _this = this;
       // Add a managed onclick event to the button
-      this.options.$addButton.click(function() {
+      this.options.$addButton.click(function () {
         _this._actionAddRow();
       });
     }
@@ -115,10 +115,10 @@ class BSTable {
    */
   currentlyEditingRow($row) {
     // Check if the row is currently being edited
-    if ($row.attr('data-status')=='editing') {
-        return true;
+    if ($row.attr('data-status') == 'editing') {
+      return true;
     } else {
-        return false;
+      return false;
     }
   }
 
@@ -147,15 +147,15 @@ class BSTable {
   // -- Private Event Functions
   // --------------------------------------------------
 
-  _rowEdit(button) {                  
-  // Indicate user is editing the row
+  _rowEdit(button) {
+    // Indicate user is editing the row
     var $row = $(button).parents('tr');       // access the row
     console.log($row);
     var $cols = $row.find('td');              // read rows
     console.log($cols);
     if (this.currentlyEditingRow($row)) return;    // not currently editing, return
     //Pone en modo de edición
-    this._modifyEachColumn(this.options.editableColumns, $cols, function($td) {  // modify each column
+    this._modifyEachColumn(this.options.editableColumns, $cols, function ($td) {  // modify each column
       var content = $td.html();             // read content
       console.log(content);
       var div = '<div style="display: none;">' + content + '</div>';  // hide content (save for later use)
@@ -164,21 +164,24 @@ class BSTable {
     });
     this._actionsModeEdit(button);
   }
-  _rowDelete(button) {                        
-  // Remove the row
+  _rowDelete(button) {
+    // Remove the row
     var $row = $(button).parents('tr');       // access the row
-    this.options.onBeforeDelete($row);
-    $row.remove();
-    this.options.onDelete();
+    var acceptDelete = { accept: false };
+    this.options.onBeforeDelete($row, acceptDelete);
+    if (acceptDelete.accept) {
+      $row.remove();
+      this.options.onDelete();
+    }
   }
   _rowAccept(button) {
-  // Accept the changes to the row
+    // Accept the changes to the row
     var $row = $(button).parents('tr');       // access the row
     var $cols = $row.find('td');              // read fields
     if (!this.currentlyEditingRow($row)) return;   // not currently editing, return
-    
+
     // Finish editing the row & save edits
-    this._modifyEachColumn(this.options.editableColumns, $cols, function($td) {  // modify each column
+    this._modifyEachColumn(this.options.editableColumns, $cols, function ($td) {  // modify each column
       var cont = $td.find('input').val();     // read through each input
       $td.html(cont);                         // set the content and remove the input fields
     });
@@ -186,15 +189,15 @@ class BSTable {
     this.options.onEdit($row);
   }
   _rowCancel(button) {
-  // Reject the changes
+    // Reject the changes
     var $row = $(button).parents('tr');       // access the row
     var $cols = $row.find('td');              // read fields
     if (!this.currentlyEditingRow($row)) return;   // not currently editing, return
 
     // Finish editing the row & delete changes
-    this._modifyEachColumn(this.options.editableColumns, $cols, function($td) {  // modify each column
-        var cont = $td.find('div').html();    // read div content
-        $td.html(cont);                       // set the content and remove the input fields
+    this._modifyEachColumn(this.options.editableColumns, $cols, function ($td) {  // modify each column
+      var cont = $td.find('div').html();    // read div content
+      $td.html(cont);                       // set the content and remove the input fields
     });
     this._actionsModeNormal(button);
   }
@@ -202,28 +205,28 @@ class BSTable {
     // Add row to this table
 
     var $allRows = this.table.find('tbody tr');
-    if ($allRows.length==0) { // there are no rows. we must create them
+    if ($allRows.length == 0) { // there are no rows. we must create them
       var $row = this.table.find('thead tr');  // find header
       var $cols = $row.find('th');  // read each header field
       // create the new row
       var newColumnHTML = '';
-      $cols.each(function() {
+      $cols.each(function () {
         let column = this; // Inner function this (column object)
-        if ($(column).attr('name')=='bstable-actions') {
+        if ($(column).attr('name') == 'bstable-actions') {
           newColumnHTML = newColumnHTML + actionsColumnHTML;  // add action buttons
         } else {
           newColumnHTML = newColumnHTML + '<td></td>';
         }
       });
-      this.table.find('tbody').append('<tr>'+newColumnHTML+'</tr>');
+      this.table.find('tbody').append('<tr>' + newColumnHTML + '</tr>');
     } else { // there are rows in the table. We will clone the last row
       var $lastRow = this.table.find('tr:last');
-      $lastRow.clone().appendTo($lastRow.parent());  
+      $lastRow.clone().appendTo($lastRow.parent());
       $lastRow = this.table.find('tr:last');
       var $cols = $lastRow.find('td');  //lee campos
-      $cols.each(function() {
+      $cols.each(function () {
         let column = this; // Inner function this (column object)
-        if ($(column).attr('name')=='bstable-actions') {
+        if ($(column).attr('name') == 'bstable-actions') {
           // action buttons column. change nothing
         } else {
           $(column).html('');  // clear the text
@@ -239,68 +242,68 @@ class BSTable {
   // --------------------------------------------------
 
   _modifyEachColumn($editableColumns, $cols, howToModify) {
-  // Go through each editable field and perform the howToModifyFunction function
+    // Go through each editable field and perform the howToModifyFunction function
     var n = 0;
-    $cols.each(function() {
+    $cols.each(function () {
       n++;
-      if ($(this).attr('name')=='bstable-actions') return;    // exclude the actions column
-      if (!isEditableColumn(n-1)) return;                     // Check if the column is editable
+      if ($(this).attr('name') == 'bstable-actions') return;    // exclude the actions column
+      if (!isEditableColumn(n - 1)) return;                     // Check if the column is editable
       howToModify($(this));                                   // If editable, call the provided function
     });
     // console.log("Number of modified columns: " + n); // debug log
-    
+
 
     function isEditableColumn(columnIndex) {
-    // Indicates if the column is editable, based on configuration
-        if ($editableColumns==null) {                           // option not defined
-            return true;                                        // all columns are editable
-        } else {                                                // option is defined
-            //console.log('isEditableColumn: ' + columnIndex);  // DEBUG
-            for (var i = 0; i < $editableColumns.length; i++) {
-              if (columnIndex == $editableColumns[i]) return true;
-            }
-            return false;  // column not found
+      // Indicates if the column is editable, based on configuration
+      if ($editableColumns == null) {                           // option not defined
+        return true;                                        // all columns are editable
+      } else {                                                // option is defined
+        //console.log('isEditableColumn: ' + columnIndex);  // DEBUG
+        for (var i = 0; i < $editableColumns.length; i++) {
+          if (columnIndex == $editableColumns[i]) return true;
         }
+        return false;  // column not found
+      }
     }
   }
 
   _addOnClickEventsToActions() {
     let _this = this;
     // Add onclick events to each action button
-    this.table.find('tbody tr #bEdit').each(function() {let button = this; button.onclick = function() {_this._rowEdit(button)} });
-    this.table.find('tbody tr #bDel').each(function() {let button = this; button.onclick = function() {_this._rowDelete(button)} });
-    this.table.find('tbody tr #bAcep').each(function() {let button = this; button.onclick = function() {_this._rowAccept(button)} });
-    this.table.find('tbody tr #bCanc').each(function() {let button = this; button.onclick = function() {_this._rowCancel(button)} });
+    this.table.find('tbody tr #bEdit').each(function () { let button = this; button.onclick = function () { _this._rowEdit(button) } });
+    this.table.find('tbody tr #bDel').each(function () { let button = this; button.onclick = function () { _this._rowDelete(button) } });
+    this.table.find('tbody tr #bAcep').each(function () { let button = this; button.onclick = function () { _this._rowAccept(button) } });
+    this.table.find('tbody tr #bCanc').each(function () { let button = this; button.onclick = function () { _this._rowCancel(button) } });
   }
 
   // --------------------------------------------------
   // -- Conversion Functions
   // --------------------------------------------------
 
-  convertTableToCSV(separator) {  
-  // Convert table to CSV
+  convertTableToCSV(separator) {
+    // Convert table to CSV
     let _this = this;
     var rowValues = '';
     var tableValues = '';
 
-    _this.table.find('tbody tr').each(function() {
-        // force edits to complete if in progress
-        if (_this.currentlyEditingRow($(this))) {
-            $(this).find('#bAcep').click();       // Force Accept Edit
+    _this.table.find('tbody tr').each(function () {
+      // force edits to complete if in progress
+      if (_this.currentlyEditingRow($(this))) {
+        $(this).find('#bAcep').click();       // Force Accept Edit
+      }
+      var $cols = $(this).find('td');           // read columns
+      rowValues = '';
+      $cols.each(function () {
+        if ($(this).attr('name') == 'bstable-actions') {
+          // buttons column - do nothing
+        } else {
+          rowValues = rowValues + $(this).html() + separator;
         }
-        var $cols = $(this).find('td');           // read columns
-        rowValues = '';
-        $cols.each(function() {
-            if ($(this).attr('name')=='bstable-actions') {
-                // buttons column - do nothing
-            } else {
-                rowValues = rowValues + $(this).html() + separator;
-            }
-        });
-        if (rowValues!='') {
-            rowValues = rowValues.substr(0, rowValues.length-separator.length); 
-        }
-        tableValues = tableValues + rowValues + '\n';
+      });
+      if (rowValues != '') {
+        rowValues = rowValues.substr(0, rowValues.length - separator.length);
+      }
+      tableValues = tableValues + rowValues + '\n';
     });
     return tableValues;
   }
