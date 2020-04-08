@@ -66,11 +66,22 @@ Handles Adding Account
 /*
 */
 	public static void deleteAccount(){
+		String website = handleUserInput("Enter name of site which you wish to delete from manager.", nonEmptyWildCardRegEx, true);
+		String pw = handleUserInput("Enter password for this site.", nonEmptyWildCardRegEx, true);
+		ad.deleteUserData(website, pw);
+
+		ac.queryAllUserData();
 	}
 
 /*
 */
 	public static void updateAccount(){
+		String website = handleUserInput("Enter name of site which you wish to update the password.", nonEmptyWildCardRegEx, true);
+		String pw = handleUserInput("Enter current password for this site.", nonEmptyWildCardRegEx, true);
+		String npw = handleUserInput("Enter new password for this site.", nonEmptyWildCardRegEx, true);
+		ad.updateUserData(website, pw, npw);
+
+		ac.queryAllUserData();
 	}
 
 /*

@@ -84,5 +84,37 @@ class AccountManager{
             System.out.println(e.getMessage());
         }
 	}
+
+	public void updateUserData(String AccountName, String CurrentPassword, String NewPassword)
+	{
+	String sql = "UPDATE UserData SET Password = ? , "
+                + "WHERE  AccountName = ? "
+				+ "AND Password = ?";
+		 
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, NewPassword);
+			pstmt.setString(2, AccountName);
+			pstmt.setString(3, CurrentPassword);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+	}
+
+	public void deleteUserData(String AccountName, String Password)
+	{
+		String sql = "DELETE FROM UserData WHERE AccountName = ? "
+				+ "AND Password = ?";
+		 
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, AccountName);
+			pstmt.setString(2, Password);
+			pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+	}
 	
 }
