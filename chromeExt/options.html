@@ -4,15 +4,48 @@
 <head>
     <title>Password Manager</title>
 </head>
+<link rel="stylesheet" href="/css/bootstrap.min.css" />
+<!-- <link rel="stylesheet" href="/css/font-awesome.css" /> -->
+
+<script src="jquery-3.4.1.min.js"></script>
+<script src="/crud-bstable/bstable.js"></script>
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
+    crossorigin="anonymous">
+<link rel="stylesheet" href="options.css">
+<script src="options.js"></script>
 
 <body>
+    <div id="main-container" class="container-md">
+        <div id="my-nav">
+            <img height="100" src="optionsLogo.png" />
+            <h1 id="title">GateKeeper</h1>
+            <h2>User Preferences</h2>
+        </div>
 
-    Password List:
-    <table>
+        <hr>
 
-    </table>
+        <button id="new-row-button" class="btn btn-dark">
+            Add New Website
+        </button>
+        <br><br>
+        <table class="table table-striped table-bordered" id="mainTable">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Website</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Password</th>
+                </tr>
+            </thead>
+            <tbody id="table_content">
 
-    <script src="options.js"></script>
+            </tbody>
+        </table>
+
+        <!-- <button onclick="save_options()">For testing...</button><br> -->
+
+    </div>
 </body>
 
 </html>

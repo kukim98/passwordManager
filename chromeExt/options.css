@@ -1,0 +1,18 @@
+/* Styling for Options Page */
+
+#main-container{
+    margin-left: 18%;
+    margin-right: 18%;
+}
+
+body{
+    margin-top:30px;
+}
+
+#title{
+    display: inline-block;
+}
+
+h2{
+    margin-top:20px;
+}
