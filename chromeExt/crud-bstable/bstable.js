@@ -158,9 +158,15 @@ class BSTable {
     this._modifyEachColumn(this.options.editableColumns, $cols, function ($td) {  // modify each column
       var content = $td.html();             // read content
       console.log(content);
+      //alert(content);
       var div = '<div style="display: none;">' + content + '</div>';  // hide content (save for later use)
-      var input = '<input class="form-control input-sm"  data-original-value="' + content + '" value="' + content + '">';
-      $td.html(div + input);                // set content
+      if ($td[0].cellIndex == 3) {
+        //alert($td.attr("plain-text-pass"));
+        var input = '<input class="form-control input-sm"  data-original-value="' + content + '" value="' + $td.attr("plain-text-pass") + '">';
+      } else {
+        var input = '<input class="form-control input-sm"  data-original-value="' + content + '" value="' + content + '">';
+      }
+      $td.html(div + input);  // set content
     });
     this._actionsModeEdit(button);
   }
@@ -221,17 +227,25 @@ class BSTable {
       this.table.find('tbody').append('<tr>' + newColumnHTML + '</tr>');
     } else { // there are rows in the table. We will clone the last row
       var $lastRow = this.table.find('tr:last');
-      $lastRow.clone().appendTo($lastRow.parent());
-      $lastRow = this.table.find('tr:last');
-      var $cols = $lastRow.find('td');  //lee campos
-      $cols.each(function () {
-        let column = this; // Inner function this (column object)
-        if ($(column).attr('name') == 'bstable-actions') {
-          // action buttons column. change nothing
-        } else {
-          $(column).html('');  // clear the text
-        }
-      });
+
+      if ($lastRow[0].cells[1].innerText != "") {
+        $lastRow.clone().appendTo($lastRow.parent());
+        $lastRow = this.table.find('tr:last');
+        var $cols = $lastRow.find('td');  //lee campos
+        var $someTest = $lastRow.find('th').innerText;
+        $lastRow[0].cells[0].innerText = "-";
+        $cols.each(function () {
+          let column = this; // Inner function this (column object)
+          if ($(column).attr('name') == 'bstable-actions') {
+            // action buttons column. change nothing
+          } else if ($(column).attr('scope') == 'row') {
+
+          } else {
+            $(column).html('');  // clear the text
+          }
+        });
+      }
+
     }
     this._addOnClickEventsToActions(); // Add onclick events to each action button in all rows
     this.options.onAdd();

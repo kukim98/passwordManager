@@ -16,7 +16,8 @@ function restore_options() {
                 var someKey = propValue.key;
 
                 if (typeof someKey !== "undefined" && propValue.un !== "") {
-                    createTableRow(count, propName, propValue.un, decrypt(propValue.pw, someKey));
+                    //createTableRow(count, propName, propValue.un, decrypt(propValue.pw, someKey));
+                    createTableRow(count, propName, propValue.un, propValue.pw, someKey);
                     count++;
                 }
 
@@ -25,25 +26,18 @@ function restore_options() {
     });
     init_dataTable();
 }
-// $("img").click(function () {
-//     alert("click!");
-// });
-// $(document).ready(function () {
-//     alert("document ready!");
-// });
+
 function init_dataTable() {
     editableTable = new BSTable("mainTable", {
         $addButton: $('#new-row-button'),
-        onAdd: function () {
-            //alert("on add");
-            //createTableRow(count, "", "", "");
-        },
+        onAdd: function () { },
         onEdit: function (someObj) {
             let keyValue = someObj[0].cells[1].innerHTML;
             let us = someObj[0].cells[2].innerHTML;
             let ps = someObj[0].cells[3].innerHTML;
 
             save_to_chrome(keyValue, us, ps);
+            location.reload();
         },
         onBeforeDelete: function (row, allowDelete) {
             let domainName = row[0].cells[1].innerHTML;
@@ -65,7 +59,6 @@ function save_to_chrome(domain, un, pw) {
     }
 
     pair = encrypt(pw, key);
-    alert("encrypted: " + pair[0]);
     chrome.storage.local.set({
         [domain]: {
             un: un,
@@ -86,7 +79,7 @@ function delete_from_chrome(domain) {
     });
 }
 
-function createTableRow(index, website, username, password) {
+function createTableRow(index, website, username, password, someKey) {
     var tableRow = document.createElement("TR");
 
     var tableCell0 = document.createElement("TH");
@@ -103,6 +96,7 @@ function createTableRow(index, website, username, password) {
 
     var tableCell3 = document.createElement("TD");
     tableCell3.appendChild(document.createTextNode(password));
+    tableCell3.setAttribute("plain-text-pass", decrypt(password, someKey));
 
     tableRow.appendChild(tableCell0);
     tableRow.appendChild(tableCell1);
