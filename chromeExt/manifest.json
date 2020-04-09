@@ -5,7 +5,9 @@
 	"description": "Manages your passwords for different websites.",
 	"permissions": [
 		"storage",
-		"webNavigation"
+		"webNavigation",
+		"tabs",
+		"<all_urls>"
 	],
 	"content_scripts": [
 		{

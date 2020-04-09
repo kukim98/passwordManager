@@ -9,13 +9,22 @@
   <h5>GATEKEEPER<img src="images/128.png" align="right" ></h5>
   <h6>recommender</h6>
 
-
+  <!-- Switch -->
+    <div class="switch">
+      <label>
+        <input type="checkbox" id="switch" checked>
+        <span class="lever"></span>
+      </label>
+    </div>
+  <script type="text/javascript" src="popup.js"></script>
+<!--
   <form action="#">
     <p>
       <label>
-        <input name="group1" type="radio" checked />
+        <input name="group1" type="radio" id="radiocheck" checked />
         <span>Regular</span>
       </label>
+      <script type="text/javascript" src="popup2.js"></script>
     </p>
     <p>
       <label>
@@ -30,7 +39,7 @@
       </label>
     </p>
   </form>
-
+-->
 </body>
 </html>
 <style>
@@ -71,8 +80,33 @@
     border: 2px solid #ABB2BF;
     background-color: #ABB2BF;
     margin-right: 0px;
-
   }
+
+.switch label input[type=checkbox]:checked + .lever:after {
+  background-color: #ABB2BF;
+}
+.switch label input[type=checkbox]:checked+.lever {
+    background-color: #54cc5a;
+}
+.switch label .lever {
+  content: "";
+  display: inline-block;
+  position: relative;
+  width: 36px;
+  height: 14px;
+  background-color: #ABB2BF;
+  border-radius: 15px;
+  margin-right: 10px;
+  -webkit-transition: background 0.3s ease;
+  transition: background 0.3s ease;
+  vertical-align: middle;
+  margin: 0 16px;
+}
+.switch label{
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
   form{
     padding-left: 10px;
   }

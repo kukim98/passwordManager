@@ -576,6 +576,14 @@ function setOnClickSaveCredential() {
 /*
 This will auto fill user credentials given there has been a saved user credential for the host-name web app and given there is a <form> with <input> tags for username and password.
 */
+function clickHandler(element) {
+	var recommender = document.getElementById("recommender");
+		recommender.style.display = element.checked ? "block" : "none";
+}
+document.addEventListener('DOMContentLoaded', function () {
+			document.querySelector(".switch").addEventListener('click', clickHandler);
+		});
+
 function autoFillCredential() {
 	var subURL = psl.parse(window.location.hostname);
 	let sub = subURL.domain;
@@ -603,17 +611,22 @@ function closeRecommender(){
 
 function createRecommender(){
 	var recommenderContainer = document.createElement("div");
+	recommenderContainer.style.display = 'block';
 	recommenderContainer.id = "recommender";
 	recommenderContainer.style.position = "fixed";
 	recommenderContainer.style.bottom = "0";
 	recommenderContainer.style.right = "0";
 	recommenderContainer.style.width = "300px";
-	recommenderContainer.style.backgroundColor ='rgba(40, 44, 52, 0.25)';
+	recommenderContainer.style.backgroundColor = white;
+	//this matches background
+	//recommenderContainer.style.backgroundColor ='rgba(40, 44, 52, 1)';
 	recommenderContainer.style.border = "1px solid #282C34";
 	recommenderContainer.style["overflow-wrap"] = "break-word";
 	var recommenderForm = document.createElement("form");
 	var formTitle = document.createElement("h1");
 	formTitle.innerHTML = "Recommender";
+
+//#ABB2BF font color should be this
 
 	var radio1 = document.createElement("input");
 	radio1.type = "radio";
@@ -850,6 +863,21 @@ function createRecommender(){
 }
 
 //These are functions called when the web browser is loaded or refreshed.
+function addCss(fileName) {
+
+  var head = document.head;
+  var link = document.createElement("link");
+
+  link.type = "text/css";
+  link.rel = "stylesheet";
+  link.href = fileName;
+
+  head.appendChild(link);
+}
+
+//addCss('/css/bootstrap.min.css');
+//addCss("https://use.typekit.net/uys5oti.css");
+//addCss("https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css");
 setOnClickSaveCredential();
 autoFillCredential();
 createRecommender();

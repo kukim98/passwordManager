@@ -1,10 +1,11 @@
-'use strict';
+function switchIt() {
+var config = document.getElementById('switch').checked;
 
-function setAlarm(event) {
+chrome.tabs.executeScript({
+    code: 'var config = ' + (config)
+}, function() {
+    chrome.tabs.executeScript({file: 'script.js'});
+});
 }
 
-function clearAlarm() {
-}
-
-//An Alarm delay of less than the minimum 1 minute will fire
-// in approximately 1 minute incriments if released
+document.getElementById('switch').addEventListener('click', switchIt);
