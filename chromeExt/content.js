@@ -623,7 +623,7 @@ function createRecommender(){
 	recommenderContainer.style.border = "1px solid #282C34";
 	recommenderContainer.style["overflow-wrap"] = "break-word";
 	var recommenderForm = document.createElement("form");
-	var formTitle = document.createElement("h1");
+	var formTitle = document.createElement("label");
 	formTitle.innerHTML = "Recommender";
 
 //#ABB2BF font color should be this
