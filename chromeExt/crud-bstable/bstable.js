@@ -232,16 +232,18 @@ class BSTable {
         $lastRow.clone().appendTo($lastRow.parent());
         $lastRow = this.table.find('tr:last');
         var $cols = $lastRow.find('td');  //lee campos
-        var $someTest = $lastRow.find('th').innerText;
+        //var $someTest = $lastRow.find('th').innerText;
         $lastRow[0].cells[0].innerText = "-";
+        //$lastRow[0].cells[3].attr("plain-text-pass", "");
         $cols.each(function () {
           let column = this; // Inner function this (column object)
           if ($(column).attr('name') == 'bstable-actions') {
             // action buttons column. change nothing
-          } else if ($(column).attr('scope') == 'row') {
-
           } else {
             $(column).html('');  // clear the text
+            if ($(column).attr('plain-text-pass') != '') {
+              $(column).attr('plain-text-pass', "");
+            }
           }
         });
       }

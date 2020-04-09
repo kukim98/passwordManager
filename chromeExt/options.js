@@ -35,19 +35,22 @@ function init_dataTable() {
             let keyValue = someObj[0].cells[1].innerHTML;
             let us = someObj[0].cells[2].innerHTML;
             let ps = someObj[0].cells[3].innerHTML;
-
             save_to_chrome(keyValue, us, ps);
             location.reload();
         },
         onBeforeDelete: function (row, allowDelete) {
             let domainName = row[0].cells[1].innerHTML;
-            if (confirm("Are you sure you want to permanently delete your data for "
-                + domainName + "?")) {
+            if (domainName != "") {
+                if (confirm("Are you sure you want to permanently delete your data for "
+                    + domainName + "?")) {
+                    allowDelete.accept = true;
+                    delete_from_chrome(domainName);
+                }
+            } else {
                 allowDelete.accept = true;
-                delete_from_chrome(domainName);
             }
+
         }
-        //onDelete: function (someVar1, someVar2) { alert("delete"); return; }
     });
     editableTable.init();
 }
