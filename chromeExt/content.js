@@ -694,7 +694,7 @@ function createRecommender(){
 		let lengthNum = parseInt(document.getElementById("lengthInput").value);
 		let lowerNum = lengthNum - capitalNum - numNum - specialNum;
 		if(specialNum + numNum + capitalNum > lengthNum){
-			regularRecommendation.innerHTML = "Password length must be less than\nthe sum of the three criteria.";
+			regularRecommendation.innerHTML = "Password length must be less than or equal to\nthe sum of the three criteria.";
 		}else{
 			var stringRec = "";
 			for(let i = 0; i < lengthNum; i++){
@@ -745,9 +745,9 @@ function createRecommender(){
 	sentenceButton.onclick = function() {
 		var sentence = document.getElementById("sentenceInput").value;
 		var result = "";
-		if(sentence.length < 8){
+		if(sentence.length < 6){
 			let sentenceRecommendation = document.getElementById("sentenceRec");
-			sentenceRecommendation.innerHTML = "Your sentence must contain at least 8 characters.";
+			sentenceRecommendation.innerHTML = "Your sentence must contain at least 6 characters.";
 		}else{
 			for(let i = 0;i < sentence.length; i++){
 				if(Math.floor(Math.random() * 10) < 4){
